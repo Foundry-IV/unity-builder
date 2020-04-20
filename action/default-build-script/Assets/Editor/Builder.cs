@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +10,14 @@ namespace UnityBuilderAction
 {
   static class Builder
   {
+    private const string KEYSTORE_PASS  = "KEYSTORE_PASS";
+    private const string KEY_ALIAS_PASS = "KEY_ALIAS_PASS";
+    private const string KEY_ALIAS_NAME = "KEY_ALIAS_NAME";
+    private const string KEYSTORE       = "keystore.keystore";
+    private const string BUILD_OPTIONS_ENV_VAR = "BuildOptions";
+    private const string ANDROID_BUNDLE_VERSION_CODE = "BUNDLE_VERSION_CODE";
+    private const string ANDROID_APP_BUNDLE = "BUILD_APP_BUNDLE";
+
     private static string EOL = Environment.NewLine;
 
     private static void ParseCommandLineArguments(out Dictionary<string, string> providedArguments)
@@ -93,6 +101,74 @@ namespace UnityBuilderAction
         target = (BuildTarget) Enum.Parse(typeof(BuildTarget), options["buildTarget"]),
       };
 
+      if (buildOptions.target == BuildTarget.Android)
+      {
+        if (TryGetEnv(ANDROID_APP_BUNDLE, out string bundle))
+        {
+#if UNITY_2018_3_OR_NEWER
+          if (bool.TryParse(bundle, out bool buildAppBundle))
+          {
+            EditorUserBuildSettings.buildAppBundle = buildAppBundle;
+            Console.WriteLine($":: {ANDROID_APP_BUNDLE} env var detected, set buildAppBundle to {bundle}.");
+          }
+          else
+          {
+            Console.WriteLine($":: {ANDROID_APP_BUNDLE} env var detected but the value \"{bundle}\" is not a boolean.");
+
+          }
+#else
+            Console.WriteLine($":: {ANDROID_APP_BUNDLE} env var detected but does not work with lower Unity version than 2018.3");
+#endif
+        }
+
+        if (TryGetEnv(ANDROID_BUNDLE_VERSION_CODE, out string version))
+        {
+          if (int.TryParse(version, out int versionCode))
+          {
+            PlayerSettings.Android.bundleVersionCode = versionCode;
+            Console.WriteLine($":: {ANDROID_BUNDLE_VERSION_CODE} env var detected, set the bundle version code to {version}.");
+          }
+          else
+            Console.WriteLine($":: {ANDROID_BUNDLE_VERSION_CODE} env var detected but the version value \"{version}\" is not an integer.");
+        }
+
+#if UNITY_2019_1_OR_NEWER
+        PlayerSettings.Android.useCustomKeystore = false;
+#endif
+
+        if (!File.Exists(KEYSTORE)) {
+          Console.WriteLine($":: {KEYSTORE} not found, skipping setup, using Unity's default keystore");
+          return;
+        }
+
+        PlayerSettings.Android.keystoreName = KEYSTORE;
+
+        string keystorePass;
+        string keystoreAliasPass;
+
+        if (TryGetEnv(KEY_ALIAS_NAME, out string keyaliasName)) {
+          PlayerSettings.Android.keyaliasName = keyaliasName;
+          Console.WriteLine($":: using ${KEY_ALIAS_NAME} env var on PlayerSettings");
+        } else {
+          Console.WriteLine($":: ${KEY_ALIAS_NAME} env var not set, using Project's PlayerSettings");
+        }
+
+        if (!TryGetEnv(KEYSTORE_PASS, out keystorePass)) {
+          Console.WriteLine($":: ${KEYSTORE_PASS} env var not set, skipping setup, using Unity's default keystore");
+          return;
+        }
+
+        if (!TryGetEnv(KEY_ALIAS_PASS, out keystoreAliasPass)) {
+          Console.WriteLine($":: ${KEY_ALIAS_PASS} env var not set, skipping setup, using Unity's default keystore");
+          return;
+        }
+#if UNITY_2019_1_OR_NEWER
+        PlayerSettings.Android.useCustomKeystore = true;
+#endif
+        PlayerSettings.Android.keystorePass = keystorePass;
+        PlayerSettings.Android.keyaliasPass = keystoreAliasPass;
+      }
+
       // Perform build
       BuildReport buildReport = BuildPipeline.BuildPlayer(buildOptions);
 
@@ -142,6 +218,12 @@ namespace UnityBuilderAction
         Console.WriteLine("Build result is unknown!");
         EditorApplication.Exit(103);
       }
+    }
+
+    static bool TryGetEnv(string key, out string value)
+    {
+      value = Environment.GetEnvironmentVariable(key);
+      return !string.IsNullOrEmpty(value);
     }
   }
 }

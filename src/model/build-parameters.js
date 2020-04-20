@@ -18,19 +18,24 @@ class BuildParameters {
       projectPath,
       buildName,
       buildPath: `${buildsPath}/${targetPlatform}`,
-      buildFile: this.parseBuildFile(buildName, targetPlatform),
+      buildFile: this.parseBuildFile(buildName, targetPlatform, customParameters),
       buildMethod,
       customParameters,
     };
   }
 
-  static parseBuildFile(filename, platform) {
+  static parseBuildFile(filename, platform, customParameters) {
     if (Platform.isWindows(platform)) {
       return `${filename}.exe`;
     }
 
     if (Platform.isAndroid(platform)) {
-      return `${filename}.apk`;
+      const extension =
+        Object.prototype.hasOwnProperty.call(customParameters, 'buildAppBundle') &&
+        customParameters.valueOf('buildAppBundle').toLocaleString() === 'true'
+          ? 'aab'
+          : 'apk';
+      return `${filename}.${extension}`;
     }
 
     return filename;
