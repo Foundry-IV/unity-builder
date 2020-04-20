@@ -47,6 +47,11 @@ class Docker {
         --env BUILD_METHOD="${buildMethod}" \
         --env CUSTOM_PARAMETERS="${customParameters}" \
         --env HOME=/github/home \
+        --env ANDROID_KEYSTORE_BASE64 \
+        --env BUILD_APP_BUNDLE \
+        --env KEYSTORE_PASS \
+        --env KEY_ALIAS_NAME \
+        --env  KEY_ALIAS_PASS \
         --env GITHUB_REF \
         --env GITHUB_SHA \
         --env GITHUB_REPOSITORY \
