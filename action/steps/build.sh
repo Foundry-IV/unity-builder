@@ -92,6 +92,22 @@ echo ""
 
 ls -alh $UNITY_PROJECT_PATH
 
+if [ $BUILD_TARGET = "Android" ]
+echo ""
+echo "###########################"
+echo "#    Android Keystore     #"
+echo "###########################"
+echo ""
+then
+    if [ -n $ANDROID_KEYSTORE_BASE64 ]
+	then
+        echo '$ANDROID_KEYSTORE_BASE64 found, decoding content into keystore.keystore'
+        echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > keystore.keystore
+    else
+        echo '$ANDROID_KEYSTORE_BASE64'" env var not found, building with Unity's default debug keystore"
+    fi
+fi
+
 echo ""
 echo "###########################"
 echo "#    Building platform    #"

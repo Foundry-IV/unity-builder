@@ -32,7 +32,7 @@ class BuildParameters {
     if (Platform.isAndroid(platform)) {
       const extension =
         Object.prototype.hasOwnProperty.call(customParameters, 'buildAppBundle') &&
-        customParameters.valueOf('buildAppBundle').toLocaleString() === 'true'
+        customParameters.valueOf('buildAppBundle').toString() === 'true'
           ? 'aab'
           : 'apk';
       return `${filename}.${extension}`;
