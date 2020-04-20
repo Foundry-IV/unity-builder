@@ -30,6 +30,10 @@ class BuildParameters {
     }
 
     if (Platform.isAndroid(platform)) {
+      console.log(
+        '******************************************************\nCUSTOM PARAMS\n******************************************************\n',
+      );
+      console.log(customParameters);
       const extension =
         Object.prototype.hasOwnProperty.call(customParameters, 'buildAppBundle') &&
         customParameters.valueOf('buildAppBundle').toString() === 'true'
