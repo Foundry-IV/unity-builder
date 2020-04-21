@@ -30,15 +30,18 @@ class BuildParameters {
     }
 
     if (Platform.isAndroid(platform)) {
-      console.log(
-        '******************************************************\nCUSTOM PARAMS\n******************************************************\n',
-      );
-      console.log(customParameters);
-      const extension =
-        Object.prototype.hasOwnProperty.call(customParameters, 'buildAppBundle') &&
-        customParameters.valueOf('buildAppBundle').toString() === 'true'
-          ? 'aab'
-          : 'apk';
+      let extension = 'apk';
+
+      const parameters = customParameters.split(' ');
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const [index, string] of parameters.entries()) {
+        if (string.includes('buildAppBundle') && parameters[index + 1] === 'true') {
+          extension = 'aab';
+          break;
+        }
+      }
+
       return `${filename}.${extension}`;
     }
 
