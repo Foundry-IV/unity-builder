@@ -5,6 +5,12 @@ const core = require('@actions/core');
 class Input {
   static getFromUser() {
     // Input variables specified in workflows using "with" prop.
+
+    // eslint-disable-next-line no-console
+    console.log('*********************  BUILD NAME **********************');
+    // eslint-disable-next-line no-console
+    console.log(core.getInput('buildName'));
+
     const unityVersion = core.getInput('unityVersion');
     const targetPlatform = core.getInput('targetPlatform') || Platform.default;
     const rawProjectPath = core.getInput('projectPath') || '.';
