@@ -37,8 +37,15 @@ class BuildParameters {
       // eslint-disable-next-line no-restricted-syntax
       for (const [index, string] of parameters.entries()) {
         if (string.includes('buildAppBundle') && parameters[index + 1] === 'true') {
+          // env name is not a known constant at this stage
+          // eslint-disable-next-line dot-notation
+          process.env['BUILD_APP_BUNDLE'] = 'true';
           extension = 'aab';
           break;
+        } else {
+          // env name is not a known constant at this stage
+          // eslint-disable-next-line dot-notation
+          process.env['BUILD_APP_BUNDLE'] = 'false';
         }
       }
 
