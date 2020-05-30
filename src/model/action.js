@@ -39,9 +39,9 @@ class Action {
 
   static checkCompatibility() {
     const currentPlatform = process.platform;
-    if (!Action.supportedPlatforms.includes(currentPlatform)) {
-      throw new Error(`Currently ${currentPlatform}-platform is not supported`);
-    }
+    // if (!Action.supportedPlatforms.includes(currentPlatform)) {
+    //   throw new Error(`Currently ${currentPlatform}-platform is not supported`);
+    // }
   }
 }
 

@@ -3,7 +3,7 @@ import { Action, BuildParameters, Cache, Docker, Input, ImageTag } from './model
 const core = require('@actions/core');
 
 async function action() {
-  Action.checkCompatibility();
+  // Action.checkCompatibility();
   Cache.verify();
 
   const { dockerfile, workspace, actionFolder } = Action;
