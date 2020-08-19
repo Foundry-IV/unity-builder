@@ -10,6 +10,8 @@ class BuildParameters {
       buildsPath,
       buildMethod,
       customParameters,
+      repository,
+      dockerImageName,
     } = parameters;
 
     return {
@@ -21,6 +23,8 @@ class BuildParameters {
       buildFile: this.parseBuildFile(buildName, targetPlatform, customParameters),
       buildMethod,
       customParameters,
+      repository,
+      dockerImageName,
     };
   }
 

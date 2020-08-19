@@ -18,6 +18,8 @@ class Input {
     const buildsPath = core.getInput('buildsPath') || 'build';
     const buildMethod = core.getInput('buildMethod'); // processed in docker file
     const customParameters = core.getInput('customParameters') || '';
+    const repository = core.getInput('repository') || 'gableroux';
+    const dockerImageName = core.getInput('dockerImageName') || 'unity3d';
 
     // Sanitise input
     const projectPath = rawProjectPath.replace(/\/$/, '');
