@@ -4,14 +4,14 @@ import ImageTag from './image-tag';
 class Docker {
   static async build(buildParameters, silent = false) {
     const { path, dockerfile, baseImage } = buildParameters;
-    const { version, platform } = baseImage;
+    const { version, platform, repository, dockerImageName } = baseImage;
 
     let tag;
     let command;
-    if (buildParameters.repository !== 'gableroux') {
+    if (repository !== 'gableroux') {
       command = `docker build ${path} \
       --file ${dockerfile} \
-      --build-arg IMAGE=${buildParameters.repository}/${buildParameters.dockerImageName} \
+      --build-arg IMAGE=${repository}/${dockerImageName} \
       --tag latest`;
     } else {
       tag = new ImageTag({ repository: '', name: 'unity-builder', version, platform });
