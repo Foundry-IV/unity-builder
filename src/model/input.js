@@ -33,6 +33,8 @@ class Input {
       buildsPath,
       buildMethod,
       customParameters,
+      repository,
+      dockerImageName,
     };
   }
 }
