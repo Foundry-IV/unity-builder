@@ -9,7 +9,7 @@ class Docker {
     let tag;
     let command;
     if (repository !== 'gableroux') {
-      tag = 'fivmax/unity-android';
+      tag = new ImageTag({ repository, name: 'unity-builder', version, platform });
       command = `docker build ${path} \
       --file ${dockerfile} \
       --build-arg IMAGE=${repository}/${name} \
