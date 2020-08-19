@@ -6,11 +6,20 @@ class Docker {
     const { path, dockerfile, baseImage } = buildParameters;
     const { version, platform } = baseImage;
 
-    const tag = new ImageTag({ repository: '', name: 'unity-builder', version, platform });
-    const command = `docker build ${path} \
+    let tag;
+    let command;
+    if (buildParameters.repository !== 'gableroux') {
+      command = `docker build ${path} \
+      --file ${dockerfile} \
+      --build-arg IMAGE=${buildParameters.repository}/${buildParameters.dockerImageName} \
+      --tag latest`;
+    } else {
+      tag = new ImageTag({ repository: '', name: 'unity-builder', version, platform });
+      command = `docker build ${path} \
       --file ${dockerfile} \
       --build-arg IMAGE=${baseImage} \
       --tag ${tag}`;
+    }
 
     await exec(command, null, { silent });
 
