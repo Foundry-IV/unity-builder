@@ -24,7 +24,7 @@ class BuildParameters {
       buildMethod,
       customParameters,
       repository,
-      dockerImageName,
+      name: dockerImageName,
     };
   }
 
