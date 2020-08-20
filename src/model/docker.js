@@ -12,7 +12,7 @@ class Docker {
       tag = new ImageTag({ repository, name: 'unity-builder', version, platform });
       command = `docker build ${path} \
       --file ${dockerfile} \
-      --build-arg IMAGE=${repository}/${name} \
+      --build-arg IMAGE=${repository}/${name}:version \
       --tag ${tag}`;
     } else {
       tag = new ImageTag({ repository: '', name: 'unity-builder', version, platform });
